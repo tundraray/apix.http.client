@@ -1,0 +1,33 @@
+{
+  "name": "Apix.Http.Client",
+  "summary": "Base Api Client",
+  "authors": [
+    "Apix"
+  ],
+  "dependencies": {
+    "NETStandard.Library": "1.6.1",
+    "Newtonsoft.Json": "9.0.1",
+    "System.Collections.Specialized": "4.3.0"
+  },
+  "description": "Base Api Client",
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  },
+  "packOptions": {
+    "name": "Apix.Http.Client",
+    "summary": "Base Api Client",
+    "projectUrl": "http://apix.live",
+    "licenseUrl": "http://apix.live",
+    "owners": [
+      "Apix"
+    ],
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://bitbucket.org/apix/apix-http-client.git"
+    }
+  },
+  "version": "1.0.0-*"
+}
