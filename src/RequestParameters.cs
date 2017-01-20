@@ -15,35 +15,21 @@ namespace Apix.Http.Client
         /// <value>The bad response action.</value>
         public Func<HttpResponseMessage, CancellationToken, Task> OnError { get; set; }
 
-        internal static RequestParameters Default
-        {
-            get
-            {
-                RequestParameters requestParameters = new RequestParameters();
-                CancellationToken none = CancellationToken.None;
-                requestParameters.CancellationToken = none;
-                return requestParameters;
-            }
-        }
+        internal static RequestParameters Default => new RequestParameters { CancellationToken = CancellationToken.None };
     }
 
     public sealed class RequestParameters<T> : RequestParametersBase
     {
-        /// <summary>Handle success response function</summary>
+        /// <summary>
+        /// Handle success response function
+        /// </summary>
         public Func<HttpResponseMessage, CancellationToken, Task<T>> OnSuccess { get; set; }
 
-        /// <summary>Handle bad response function</summary>
+        /// <summary>
+        /// Handle bad response function
+        /// </summary>
         public Func<HttpResponseMessage, CancellationToken, Task<T>> OnError { get; set; }
 
-        internal static RequestParameters<T> Default
-        {
-            get
-            {
-                RequestParameters<T> requestParameters = new RequestParameters<T>();
-                CancellationToken none = CancellationToken.None;
-                requestParameters.CancellationToken = none;
-                return requestParameters;
-            }
-        }
+        internal static RequestParameters<T> Default => new RequestParameters<T> { CancellationToken = CancellationToken.None };
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Apix.Http.Client.Exceptions;
@@ -8,6 +11,8 @@ namespace Apix.Http.Client
 {
     public class HttpClientBase : IHttpClient, IDisposable
     {
+        private readonly Dictionary<string, string> _headers;
+
         #region Fields
 
         private bool _disposed;
@@ -20,6 +25,8 @@ namespace Apix.Http.Client
         public Uri Uri { get; private set; }
         public TimeSpan Timeout { get; set; } = new TimeSpan(0, 10, 0);
         public HttpMessageHandler MessageHandler { get; private set; }
+
+        protected IHttpClient HttpClient => this;
 
         protected virtual Func<HttpResponseMessage, CancellationToken, Task> DefaultBadResponseAction
         {
@@ -34,19 +41,39 @@ namespace Apix.Http.Client
 
         #endregion
 
-        protected HttpClientBase()
+        #region Constructor
+
+
+        public HttpClientBase(Dictionary<string,string> headers, bool clearHeader = false)
         {
+            
             Timeout = new TimeSpan(0, 10, 0);
             MessageHandler = new HttpClientHandler();
-            _client = CreateClient();
+            _client = CreateClient(headers, clearHeader);
         }
 
 
-        protected HttpClient CreateClient()
+        public HttpClientBase(bool clearHeader = false) : this(new Dictionary<string, string>(), clearHeader)
+        {
+        }
+
+        #endregion
+
+
+
+        protected HttpClient CreateClient(Dictionary<string, string> headers, bool clearHeader = false)
         {
             var httpClient = new HttpClient(MessageHandler);
             httpClient.BaseAddress = Uri;
             httpClient.Timeout = Timeout;
+
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            foreach (var header in headers)
+            {
+                httpClient.DefaultRequestHeaders.Add(header.Key,header.Value);
+            }
+            
             return httpClient;
         }
 
@@ -279,9 +306,13 @@ namespace Apix.Http.Client
             return obj;
         }
 
-        private Task<T> ProcessResponseAsync<T>(HttpResponseMessage response, object onSuccess, object onError, object cancellationToken)
+        private Task<T> ProcessResponseAsync<T>(HttpResponseMessage response, object onSuccess, object onError, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (response.IsSuccessStatusCode)
+            {
+                return DefaultHandleResponseFunctionAsync<T>(response, cancellationToken);
+            }
+            return DefaultBadResponseFunctionAsync<T>(response);
         }
 
         #endregion
@@ -380,6 +411,29 @@ namespace Apix.Http.Client
             GC.SuppressFinalize(this);
         }
 
+        #endregion
+
+        #region Protected virtual methods
+        /// <summary>
+        /// Default bad response action
+        /// </summary>
+        protected virtual Task<T> DefaultBadResponseFunctionAsync<T>(HttpResponseMessage response)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            ThreadPool.QueueUserWorkItem(_ => tcs.SetException(HttpClientException.FromResponse(response)));
+            return tcs.Task;
+        }
+        /// <summary>
+        /// Default async handle response function
+        /// </summary>
+        /// <typeparam name="T">Content type</typeparam>
+        /// <param name="response">Input response</param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Output value</returns>
+        protected virtual Task<T> DefaultHandleResponseFunctionAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
+        {
+            return response.Content.ReadAsAsync<T>(new[] {new JsonMediaTypeFormatter()}, cancellationToken);
+        }
         #endregion
 
     }

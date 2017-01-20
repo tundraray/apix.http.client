@@ -7,7 +7,9 @@
   "dependencies": {
     "NETStandard.Library": "1.6.1",
     "Newtonsoft.Json": "9.0.1",
-    "System.Collections.Specialized": "4.3.0"
+    "System.Collections.Specialized": "4.3.0",
+    "System.Threading.ThreadPool": "4.3.0",
+    "WinInsider.System.Net.Http.Formatting": "1.0.2"
   },
   "description": "Base Api Client",
   "frameworks": {
