@@ -64,7 +64,6 @@ namespace Apix.Http.Client
         protected HttpClient CreateClient(Dictionary<string, string> headers, bool clearHeader = false)
         {
             var httpClient = new HttpClient(MessageHandler);
-            httpClient.BaseAddress = Uri;
             httpClient.Timeout = Timeout;
 
             httpClient.DefaultRequestHeaders.Accept.Clear();
