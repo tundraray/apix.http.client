@@ -22,7 +22,6 @@ namespace Apix.Http.Client
 
         #region Properties
 
-        public Uri Uri { get; private set; }
         public TimeSpan Timeout { get; set; } = new TimeSpan(0, 10, 0);
         public HttpMessageHandler MessageHandler { get; private set; }
 
@@ -323,7 +322,7 @@ namespace Apix.Http.Client
         {
 
             HttpContent httpContent = (object)value is HttpContent ? (object)value as HttpContent : new JsonContent<T>(value);
-            HttpRequestMessage request = new HttpRequestMessage(HttpHelpers.Patch, new Uri(Uri, requestUri))
+            HttpRequestMessage request = new HttpRequestMessage(HttpHelpers.Patch, new Uri( requestUri))
             {
                 Content = httpContent
             };
@@ -332,14 +331,14 @@ namespace Apix.Http.Client
 
         private Task<HttpResponseMessage> GetAsync(string requestUri, CancellationToken cancellationToken)
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri(Uri, requestUri));
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri( requestUri));
             return _client.SendAsync(request, cancellationToken);
         }
 
         private Task<HttpResponseMessage> PostAsync<T>(string requestUri, T value, CancellationToken cancellationToken)
         {
             HttpContent httpContent = (object)value is HttpContent ? (object)value as HttpContent : new JsonContent<T>(value);
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri(Uri, requestUri))
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri( requestUri))
             {
                 Content = httpContent
             };
@@ -349,7 +348,7 @@ namespace Apix.Http.Client
         private Task<HttpResponseMessage> PutAsync<T>(string requestUri, T value, CancellationToken cancellationToken)
         {
             HttpContent httpContent = (object)value is HttpContent ? (object)value as HttpContent : new JsonContent<T>(value);
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, new Uri(Uri, requestUri))
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, new Uri( requestUri))
             {
                 Content = httpContent
             };
@@ -359,7 +358,7 @@ namespace Apix.Http.Client
         private Task<HttpResponseMessage> DeleteAsync(string requestUri, CancellationToken cancellationToken)
         {
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, new Uri(Uri, requestUri));
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, new Uri(requestUri));
             return _client.SendAsync(request, cancellationToken);
         }
 
