@@ -69,7 +69,7 @@ namespace Apix.Http.Client
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             foreach (var header in headers)
             {
-                httpClient.DefaultRequestHeaders.Add(header.Key,header.Value);
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key,header.Value);
             }
             
             return httpClient;
