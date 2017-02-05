@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Apix.Http.Client.Exceptions;
-using Apix.Json;
 
 namespace Apix.Http.Client
 {

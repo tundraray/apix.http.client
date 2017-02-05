@@ -5,7 +5,6 @@
     "Apix"
   ],
   "dependencies": {
-    "Apix.Json": "1.0.0-*",
     "NETStandard.Library": "1.6.1",
     "System.Collections.Specialized": "4.3.0",
     "System.Text.Encoding.CodePages": "4.3.0",
