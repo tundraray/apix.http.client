@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 
 namespace Apix.Http.Client.Exceptions
 {
@@ -37,8 +39,15 @@ namespace Apix.Http.Client.Exceptions
             if (response == null)
                 return;
             Response = response;
-            Content = response.Content != null ? response.Content.ReadAsStringAsync().Result : string.Empty;
+            Content = response.Content != null ? ReadAsString(response.Content.ReadAsByteArrayAsync().Result) : string.Empty;
             Request = response.RequestMessage;
+        }
+
+        private string ReadAsString(byte[] buffer)
+        {
+            var byteArray = buffer.ToArray();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            return Encoding.UTF8.GetString(byteArray, 0, byteArray.Length);
         }
 
         /// <summary>Get exception from response</summary>

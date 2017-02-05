@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Apix.Http.Client.Exceptions;
+using Apix.Json;
 
 namespace Apix.Http.Client
 {
@@ -16,7 +18,7 @@ namespace Apix.Http.Client
         #region Fields
 
         private bool _disposed;
-        private readonly HttpClient _client;
+        protected readonly HttpClient _client;
 
         #endregion
 
@@ -33,6 +35,7 @@ namespace Apix.Http.Client
             {
                 return (response, cancellationToken) =>
                 {
+                    
                     throw HttpClientException.FromResponse(response);
                 };
             }
@@ -430,7 +433,8 @@ namespace Apix.Http.Client
         /// <returns>Output value</returns>
         protected virtual Task<T> DefaultHandleResponseFunctionAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
         {
-            return response.Content.ReadAsAsync<T>(new[] {new JsonMediaTypeFormatter()}, cancellationToken);
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            return response.Content.ReadAsAsync<T>(new[] {new JsonMediaTypeFormatter() { SupportedEncodings = { Encoding.GetEncoding("windows-1251") , Encoding.UTF8} } }, cancellationToken);
         }
         #endregion
 

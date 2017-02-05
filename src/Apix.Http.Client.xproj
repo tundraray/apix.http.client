@@ -6,7 +6,7 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>f7f950c1-20a7-4c0b-99ec-616b4f705287</ProjectGuid>
+    <ProjectGuid>6bc077ad-ddc4-4c9d-bddc-74cb0b21918a</ProjectGuid>
     <RootNamespace>Apix.Http.Client</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
