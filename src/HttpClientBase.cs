@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
@@ -25,6 +26,7 @@ namespace Apix.Http.Client
 
         public TimeSpan Timeout { get; set; } = new TimeSpan(0, 10, 0);
         public HttpMessageHandler MessageHandler { get; private set; }
+        public ProxySettings Proxy { get; set; }
 
         protected IHttpClient HttpClient => this;
 
@@ -34,7 +36,7 @@ namespace Apix.Http.Client
             {
                 return (response, cancellationToken) =>
                 {
-                    
+
                     throw HttpClientException.FromResponse(response);
                 };
             }
@@ -44,22 +46,32 @@ namespace Apix.Http.Client
 
         #region Constructor
 
-
-        public HttpClientBase(Dictionary<string,string> headers, bool clearHeader = false)
+        public HttpClientBase(Dictionary<string, string> headers, bool clearHeader = false, ProxySettings proxy = null)
         {
-            
             Timeout = new TimeSpan(0, 10, 0);
             MessageHandler = new HttpClientHandler();
+            MessageHandler = new HttpClientHandler()
+            {
+                Proxy = proxy == null ? null : new WebProxy(proxy),
+                AllowAutoRedirect = true,
+                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip | DecompressionMethods.None,
+                UseProxy = proxy != null
+            };
+
             _client = CreateClient(headers, clearHeader);
         }
 
+        public HttpClientBase(HttpClientOptions options) : this(options.Headers, options.ResetHeaders, options.Proxy)
+        {
 
-        public HttpClientBase(bool clearHeader = false) : this(new Dictionary<string, string>(), clearHeader)
+        }
+
+        public HttpClientBase(bool clearHeader = false, ProxySettings proxy = null) 
+            : this(new Dictionary<string, string>(), clearHeader, proxy)
         {
         }
 
         #endregion
-
 
 
         protected HttpClient CreateClient(Dictionary<string, string> headers, bool clearHeader = false)
@@ -71,9 +83,9 @@ namespace Apix.Http.Client
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             foreach (var header in headers)
             {
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key,header.Value);
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
             }
-            
+
             return httpClient;
         }
 
@@ -324,7 +336,7 @@ namespace Apix.Http.Client
         {
 
             HttpContent httpContent = (object)value is HttpContent ? (object)value as HttpContent : new JsonContent<T>(value);
-            HttpRequestMessage request = new HttpRequestMessage(HttpHelpers.Patch, new Uri( requestUri))
+            HttpRequestMessage request = new HttpRequestMessage(HttpHelpers.Patch, new Uri(requestUri))
             {
                 Content = httpContent
             };
@@ -333,14 +345,14 @@ namespace Apix.Http.Client
 
         private Task<HttpResponseMessage> GetAsync(string requestUri, CancellationToken cancellationToken)
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri( requestUri));
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, new Uri(requestUri));
             return _client.SendAsync(request, cancellationToken);
         }
 
         private Task<HttpResponseMessage> PostAsync<T>(string requestUri, T value, CancellationToken cancellationToken)
         {
             HttpContent httpContent = (object)value is HttpContent ? (object)value as HttpContent : new JsonContent<T>(value);
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri( requestUri))
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri(requestUri))
             {
                 Content = httpContent
             };
@@ -350,7 +362,7 @@ namespace Apix.Http.Client
         private Task<HttpResponseMessage> PutAsync<T>(string requestUri, T value, CancellationToken cancellationToken)
         {
             HttpContent httpContent = (object)value is HttpContent ? (object)value as HttpContent : new JsonContent<T>(value);
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, new Uri( requestUri))
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, new Uri(requestUri))
             {
                 Content = httpContent
             };
@@ -433,7 +445,7 @@ namespace Apix.Http.Client
         protected virtual Task<T> DefaultHandleResponseFunctionAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            return response.Content.ReadAsAsync<T>(new[] {new JsonMediaTypeFormatter() { SupportedEncodings = { Encoding.GetEncoding("windows-1251") , Encoding.UTF8} } }, cancellationToken);
+            return response.Content.ReadAsAsync<T>(new[] { new JsonMediaTypeFormatter() { SupportedEncodings = { Encoding.GetEncoding("windows-1251"), Encoding.UTF8 } } }, cancellationToken);
         }
         #endregion
 
