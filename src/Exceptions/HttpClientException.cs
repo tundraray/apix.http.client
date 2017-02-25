@@ -95,7 +95,7 @@ namespace Apix.Http.Client.Exceptions
         }
 
         /// <inheritdoc />
-        public virtual string ToString()
+        public override string ToString()
         {
             string str = (Response == null || Response.RequestMessage == null ? 0 : (Response.RequestMessage.RequestUri != (Uri)null ? 1 : 0)) != 0 ? Response.RequestMessage.RequestUri.ToString() : string.Empty;
             if (Response == null)

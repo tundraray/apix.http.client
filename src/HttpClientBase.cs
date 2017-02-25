@@ -13,8 +13,6 @@ namespace Apix.Http.Client
 {
     public class HttpClientBase : IHttpClient, IDisposable
     {
-        private readonly Dictionary<string, string> _headers;
-
         #region Fields
 
         private bool _disposed;

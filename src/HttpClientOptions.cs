@@ -7,7 +7,7 @@ namespace Apix.Http.Client
 {
     public class HttpClientOptions
     {
-        public Dictionary<string, string> Headers  { get; set; } = new Dictionary<string, string>()
+        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
         public bool ResetHeaders { get; set; } = false;
         public ProxySettings Proxy { get; set; }
     }
