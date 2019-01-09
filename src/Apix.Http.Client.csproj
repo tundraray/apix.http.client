@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <Description>Base Api Client</Description>
-    <VersionPrefix>1.0.14</VersionPrefix>
-    <VersionSuffix>
-    </VersionSuffix>
     <Authors>Mikhail Andreev</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Apix.Http.Client</AssemblyName>
@@ -17,5 +14,11 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
+    <PackageReference Include="WinInsider.System.Net.Http.Formatting" Version="1.0.5" />
+  </ItemGroup>
 
 </Project>
