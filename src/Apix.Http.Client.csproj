@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Base Api Client</Description>
+    <VersionPrefix>1.0.14</VersionPrefix>
+    <VersionSuffix>
+    </VersionSuffix>
+    <Authors>Mikhail Andreev</Authors>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Apix.Http.Client</AssemblyName>
+    <PackageId>Apix.Http.Client</PackageId>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/tundraray/apix.http.client.git</RepositoryUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0" />
+    <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
+    <PackageReference Include="WinInsider.System.Net.Http.Formatting" Version="1.0.2" />
+  </ItemGroup>
+
+</Project>

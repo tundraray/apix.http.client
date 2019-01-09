@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Apix.Extensions;
 
 namespace Apix.Http.Client
 {
@@ -13,7 +11,7 @@ namespace Apix.Http.Client
         {
             var protocol = settings.UseHttps ? "https" : "http";
             ProxyUri = new Uri($"{protocol}://{settings.Address}:{settings.Port}");
-            if (settings.Password.IsNotNullOrEmpty() || settings.UserName.IsNotNullOrEmpty())
+            if (string.IsNullOrEmpty(settings.Password)|| string.IsNullOrEmpty(settings.UserName))
             {
                 Credentials = new NetworkCredential(settings.UserName,settings.Password);
             }
